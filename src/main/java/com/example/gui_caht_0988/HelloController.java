@@ -8,7 +8,9 @@ import javafx.scene.control.TextField;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class HelloController {
     Socket socket;
@@ -16,11 +18,14 @@ public class HelloController {
     TextField textField;
     @FXML
     TextArea textArea;
+    @FXML
+    TextArea onlineUsers;
     @FXML //аннотация
     private void send(){
         try {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             String text = textField.getText();
+            out.writeUTF(text);
             textField.clear();
             textField.requestFocus();
             textArea.appendText("Вы: "+text+"\n");
@@ -31,16 +36,30 @@ public class HelloController {
     @FXML
     private void  connect(){
         try {
-            socket = new Socket("localhost", 8188);/*192.168.42.240*/
-            DataInputStream in = new DataInputStream(socket.getInputStream());
+            socket = new Socket("localhost", 8188);
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while (true) {
+                    while (true){
+                        String response = "";
+                        ArrayList<String> usersName = new ArrayList<String>();
                         try {
-                            String response = in.readUTF();
-                            textArea.appendText(response + "\n");
-                        } catch (IOException e) {
+                            Object object = ois.readObject();
+                            if(object.getClass().equals(usersName.getClass())){
+                                usersName = ((ArrayList<String>) object);
+                                System.out.println(usersName);
+                                onlineUsers.clear(); // Очищает TextArea
+                                for (String userName:usersName) {
+                                    onlineUsers.appendText(userName+"\n");
+                                }
+                            }else if (object.getClass().equals(response.getClass())){
+                                response = object.toString();
+                                textArea.appendText(response+"\n");
+                            }else{
+                                textArea.appendText("Произошла ошибка");
+                            }
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
