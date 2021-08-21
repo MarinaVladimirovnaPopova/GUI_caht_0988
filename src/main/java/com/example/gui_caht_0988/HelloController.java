@@ -18,7 +18,7 @@ public class HelloController {
     Socket socket;
     @FXML
     public HBox msgBox;
-       @FXML
+    @FXML
     Button send;
     @FXML
     TextField textField;
