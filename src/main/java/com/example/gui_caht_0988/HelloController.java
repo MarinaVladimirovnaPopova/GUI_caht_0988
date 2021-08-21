@@ -1,9 +1,11 @@
 package com.example.gui_caht_0988;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,11 +17,16 @@ import java.util.ArrayList;
 public class HelloController {
     Socket socket;
     @FXML
+    public HBox msgBox;
+       @FXML
+    Button send;
+    @FXML
     TextField textField;
     @FXML
     TextArea textArea;
     @FXML
     TextArea onlineUsers;
+
     @FXML //аннотация
     private void send(){
         try {
@@ -36,7 +43,7 @@ public class HelloController {
     @FXML
     private void  connect(){
         try {
-            socket = new Socket("localhost", 8188);
+            socket = new Socket("localhost", 8168);
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Thread thread = new Thread(new Runnable() {
                 @Override
@@ -59,8 +66,12 @@ public class HelloController {
                             }else{
                                 textArea.appendText("Произошла ошибка");
                             }
+                            send.setVisible(false);
+                            msgBox.setDisable(false);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            send.setVisible(true);
+                            msgBox.setDisable(true);
                         }
                     }
                 }
@@ -72,11 +83,4 @@ public class HelloController {
 
     }
 
-    @FXML
-    private Label welcomeText;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
 }

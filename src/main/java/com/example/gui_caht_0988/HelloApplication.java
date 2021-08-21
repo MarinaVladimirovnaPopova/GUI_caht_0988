@@ -12,11 +12,11 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
-        //FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        //Scene scene = new Scene(fxmlLoader.load(), 400, 300);
+        //Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 400, 300);
         stage.setTitle("Hello!");
-        stage.setScene(new Scene(root, 400, 300));
+        stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(e->{ //вызывается метод, где функция запускается при закрытии окна. e - объект события. Лямбда выражение
             Platform.exit();
